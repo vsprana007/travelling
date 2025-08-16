@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /api/
+
+# Allow important pages
+Allow: /
+Allow: /domestic
+Allow: /international
+Allow: /mice
+Allow: /offers
+Allow: /about
+Allow: /contact
+Allow: /gallery
+Allow: /blog
+
+# Sitemap location
+Sitemap: https://travelco.com/sitemap.xml
