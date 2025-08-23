@@ -74,7 +74,7 @@ export function AdminStats() {
 
   if (isLoading) {
     return (
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -115,16 +115,16 @@ export function AdminStats() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalUsers}</div>
+            <div className="text-xl lg:text-2xl font-bold">{stats.totalUsers}</div>
             <p className="text-xs text-muted-foreground">
               <TrendingUp className="h-3 w-3 inline mr-1" />
               +12% from last month
@@ -138,7 +138,7 @@ export function AdminStats() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalPackages}</div>
+            <div className="text-xl lg:text-2xl font-bold">{stats.totalPackages}</div>
             <p className="text-xs text-muted-foreground">
               <TrendingUp className="h-3 w-3 inline mr-1" />
               +3 new this month
@@ -152,7 +152,7 @@ export function AdminStats() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalBookings}</div>
+            <div className="text-xl lg:text-2xl font-bold">{stats.totalBookings}</div>
             <p className="text-xs text-muted-foreground">
               <TrendingUp className="h-3 w-3 inline mr-1" />
               +8% from last month
@@ -166,7 +166,7 @@ export function AdminStats() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</div>
+            <div className="text-lg lg:text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</div>
             <p className="text-xs text-muted-foreground">
               <TrendingUp className="h-3 w-3 inline mr-1" />
               +15% from last month
@@ -178,20 +178,20 @@ export function AdminStats() {
       {/* Recent Bookings */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Bookings</CardTitle>
+          <CardTitle className="text-lg lg:text-xl">Recent Bookings</CardTitle>
           <CardDescription>Latest booking activities</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-3 lg:space-y-4">
             {stats.recentBookings.map((booking) => (
-              <div key={booking.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="space-y-1">
-                  <p className="font-medium">{booking.package_title}</p>
+              <div key={booking.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 lg:p-4 border rounded-lg gap-3 sm:gap-0">
+                <div className="space-y-1 min-w-0 flex-1">
+                  <p className="font-medium text-sm lg:text-base truncate">{booking.package_title}</p>
                   <p className="text-sm text-muted-foreground">by {booking.user_name}</p>
                   <p className="text-xs text-muted-foreground">{new Date(booking.created_at).toLocaleDateString()}</p>
                 </div>
-                <div className="text-right space-y-1">
-                  <p className="font-medium">{formatCurrency(booking.total_amount)}</p>
+                <div className="flex sm:flex-col sm:text-right items-center sm:items-end justify-between sm:justify-start gap-2 sm:gap-1 flex-shrink-0">
+                  <p className="font-medium text-sm lg:text-base">{formatCurrency(booking.total_amount)}</p>
                   <Badge className={getStatusColor(booking.status)}>{booking.status}</Badge>
                 </div>
               </div>

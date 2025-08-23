@@ -61,28 +61,29 @@ export function CreatePackageForm({ onSuccess }: CreatePackageFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2">
+    <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
+      <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="title">Package Title</Label>
+          <Label htmlFor="title" className="text-sm font-medium">Package Title</Label>
           <Input
             id="title"
             value={formData.title}
             onChange={(e) => handleChange("title", e.target.value)}
             placeholder="Enter package title"
+            className="text-sm"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="category">Category</Label>
+          <Label htmlFor="category" className="text-sm font-medium">Category</Label>
           <Select value={formData.category} onValueChange={(value) => handleChange("category", value)}>
-            <SelectTrigger>
+            <SelectTrigger className="text-sm">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
-                <SelectItem key={category} value={category}>
+                <SelectItem key={category} value={category} className="text-sm">
                   {category}
                 </SelectItem>
               ))}
@@ -92,62 +93,67 @@ export function CreatePackageForm({ onSuccess }: CreatePackageFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description" className="text-sm font-medium">Description</Label>
         <Textarea
           id="description"
           value={formData.description}
           onChange={(e) => handleChange("description", e.target.value)}
           placeholder="Enter package description"
           rows={4}
+          className="text-sm resize-none"
           required
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div className="space-y-2">
-          <Label htmlFor="price">Price (₹)</Label>
+          <Label htmlFor="price" className="text-sm font-medium">Price (₹)</Label>
           <Input
             id="price"
             type="number"
             value={formData.price}
             onChange={(e) => handleChange("price", e.target.value)}
             placeholder="25000"
+            className="text-sm"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="duration">Duration (Days)</Label>
+          <Label htmlFor="duration" className="text-sm font-medium">Duration (Days)</Label>
           <Input
             id="duration"
             type="number"
             value={formData.duration_days}
             onChange={(e) => handleChange("duration_days", e.target.value)}
             placeholder="6"
+            className="text-sm"
             required
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="max_people">Max People</Label>
+        <div className="space-y-2 sm:col-span-2 lg:col-span-1">
+          <Label htmlFor="max_people" className="text-sm font-medium">Max People</Label>
           <Input
             id="max_people"
             type="number"
             value={formData.max_people}
             onChange={(e) => handleChange("max_people", e.target.value)}
             placeholder="15"
+            className="text-sm"
             required
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="image_url">Image URL</Label>
+        <Label htmlFor="image_url" className="text-sm font-medium">Image URL</Label>
         <Input
           id="image_url"
           value={formData.image_url}
           onChange={(e) => handleChange("image_url", e.target.value)}
           placeholder="https://example.com/image.jpg"
+          className="text-sm"
         />
       </div>
 
@@ -157,14 +163,14 @@ export function CreatePackageForm({ onSuccess }: CreatePackageFormProps) {
           checked={formData.is_featured}
           onCheckedChange={(checked) => handleChange("is_featured", checked as boolean)}
         />
-        <Label htmlFor="featured">Mark as featured package</Label>
+        <Label htmlFor="featured" className="text-sm">Mark as featured package</Label>
       </div>
 
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onSuccess}>
+      <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-2 pt-4">
+        <Button type="button" variant="outline" onClick={onSuccess} className="text-sm">
           Cancel
         </Button>
-        <Button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading} className="text-sm">
           {isLoading ? "Creating..." : "Create Package"}
         </Button>
       </div>

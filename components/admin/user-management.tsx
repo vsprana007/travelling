@@ -30,6 +30,17 @@ export function UserManagement() {
 
   const fetchUsers = async () => {
     try {
+      setIsLoading(true)
+      // Try to fetch from API first
+      try {
+        // TODO: Replace with actual API call when backend is ready
+        // const response = await usersApi.getAll()
+        // setUsers(response.data)
+        throw new Error("API not implemented yet")
+      } catch (apiError) {
+        console.log("Using fallback data:", apiError)
+      }
+      
       // Mock data for now - replace with actual API call
       const mockUsers: User[] = [
         {
@@ -117,36 +128,37 @@ export function UserManagement() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>User Management</CardTitle>
-        <CardDescription>Manage user accounts and permissions</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {/* Search */}
-        <div className="flex items-center space-x-2 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search users..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </div>
+    <div className="space-y-4 lg:space-y-6">
+      <div>
+        <h1 className="text-xl lg:text-2xl font-serif font-bold text-gray-800">User Management</h1>
+        <p className="text-sm lg:text-base text-gray-600">Manage user accounts and permissions</p>
+      </div>
 
-        {/* Users Table */}
-        <div className="rounded-md border">
+      {/* Search */}
+      <Card className="p-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 text-sm"
+          />
+        </div>
+      </Card>
+
+      {/* Users Table - Mobile Responsive */}
+      <Card className="overflow-hidden">
+        <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>User</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Joined</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="text-xs lg:text-sm">User</TableHead>
+                <TableHead className="hidden md:table-cell text-xs lg:text-sm">Contact</TableHead>
+                <TableHead className="text-xs lg:text-sm">Role</TableHead>
+                <TableHead className="text-xs lg:text-sm">Status</TableHead>
+                <TableHead className="hidden lg:table-cell text-xs lg:text-sm">Joined</TableHead>
+                <TableHead className="text-xs lg:text-sm">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -154,16 +166,28 @@ export function UserManagement() {
                 <TableRow key={user.id}>
                   <TableCell>
                     <div>
-                      <p className="font-medium">
+                      <p className="font-medium text-sm lg:text-base">
                         {user.first_name} {user.last_name}
                       </p>
-                      <p className="text-sm text-muted-foreground flex items-center">
-                        <Mail className="h-3 w-3 mr-1" />
+                      <p className="text-xs lg:text-sm text-muted-foreground flex items-center truncate max-w-48">
+                        <Mail className="h-3 w-3 mr-1 flex-shrink-0" />
                         {user.email}
                       </p>
+                      <div className="md:hidden mt-1 space-y-1">
+                        {user.phone && (
+                          <p className="text-xs text-muted-foreground flex items-center">
+                            <Phone className="h-3 w-3 mr-1" />
+                            {user.phone}
+                          </p>
+                        )}
+                        <p className="lg:hidden text-xs text-muted-foreground flex items-center">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {new Date(user.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">
                     {user.phone && (
                       <p className="text-sm flex items-center">
                         <Phone className="h-3 w-3 mr-1" />
@@ -172,14 +196,19 @@ export function UserManagement() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={user.is_admin ? "default" : "secondary"}>{user.is_admin ? "Admin" : "User"}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={user.is_active ? "default" : "destructive"}>
-                      {user.is_active ? "Active" : "Inactive"}
+                    <Badge variant={user.is_admin ? "default" : "secondary"} className="text-xs">
+                      {user.is_admin ? "Admin" : "User"}
                     </Badge>
                   </TableCell>
                   <TableCell>
+                    <Badge 
+                      variant={user.is_active ? "default" : "destructive"}
+                      className="text-xs"
+                    >
+                      {user.is_active ? "Active" : "Inactive"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell">
                     <p className="text-sm flex items-center">
                       <Calendar className="h-3 w-3 mr-1" />
                       {new Date(user.created_at).toLocaleDateString()}
@@ -190,17 +219,19 @@ export function UserManagement() {
                       size="sm"
                       variant={user.is_active ? "destructive" : "default"}
                       onClick={() => toggleUserStatus(user.id, user.is_active)}
-                      className="gap-1"
+                      className="gap-1 text-xs lg:text-sm h-7 lg:h-8"
                     >
                       {user.is_active ? (
                         <>
                           <UserX className="h-3 w-3" />
-                          Deactivate
+                          <span className="hidden sm:inline">Deactivate</span>
+                          <span className="sm:hidden">Off</span>
                         </>
                       ) : (
                         <>
                           <UserCheck className="h-3 w-3" />
-                          Activate
+                          <span className="hidden sm:inline">Activate</span>
+                          <span className="sm:hidden">On</span>
                         </>
                       )}
                     </Button>
@@ -213,10 +244,10 @@ export function UserManagement() {
 
         {filteredUsers.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-muted-foreground">No users found matching your search.</p>
+            <p className="text-muted-foreground text-sm lg:text-base">No users found matching your search.</p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </Card>
+    </div>
   )
 }

@@ -33,13 +33,11 @@ class ApiClient {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
     const url = `${this.baseURL}${endpoint}`
 
-    const headers: HeadersInit = {
-      "Content-Type": "application/json",
-      ...options.headers,
-    }
+    const headers = new Headers(options.headers as HeadersInit)
+    headers.set("Content-Type", "application/json")
 
     if (this.token) {
-      headers.Authorization = `Bearer ${this.token}`
+      headers.set("Authorization", `Bearer ${this.token}`)
     }
 
     try {
@@ -88,11 +86,18 @@ class ApiClient {
   // Package endpoints
   async getPackages(params?: { limit?: number; offset?: number; featured?: boolean }) {
     const queryString = params ? `?${new URLSearchParams(params as any).toString()}` : ""
-    return this.request<any[]>(`/packages${queryString}`)
+    if (params?.featured) {
+      return this.request<any[]>("/packages/featured")
+    }
+    const response = await this.request<{ packages: any[]; total: number }>(`/packages${queryString}`)
+    if (response.data) {
+      return { data: response.data.packages, total: response.data.total }
+    }
+    return response
   }
 
   async getFeaturedPackages() {
-    return this.request<any[]>("/packages?featured=true")
+    return this.request<any[]>("/packages/featured")
   }
 
   async getPackageById(id: string) {
@@ -157,7 +162,7 @@ class ApiClient {
   }
 
   async getCategories() {
-    return this.request<any[]>("/admin/categories")
+    return this.request<any[]>("/categories")
   }
 
   async createCategory(categoryData: {
@@ -171,6 +176,23 @@ class ApiClient {
     })
   }
 
+  async updateCategory(id: string, categoryData: {
+    name: string
+    description?: string
+    icon?: string
+  }) {
+    return this.request<any>(`/admin/categories/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(categoryData),
+    })
+  }
+
+  async deleteCategory(id: string) {
+    return this.request<any>(`/admin/categories/${id}`, {
+      method: "DELETE",
+    })
+  }
+
   async getAllBookings() {
     return this.request<any[]>("/admin/bookings")
   }
@@ -179,6 +201,51 @@ class ApiClient {
     return this.request<any>(`/admin/bookings/${id}/status`, {
       method: "PUT",
       body: JSON.stringify({ status }),
+    })
+  }
+
+  // Blog endpoints
+  async getBlogPosts(params?: { limit?: number; offset?: number; status?: string }) {
+    const queryString = params ? `?${new URLSearchParams(params as any).toString()}` : ""
+    return this.request<any[]>(`/admin/blog${queryString}`)
+  }
+
+  async getBlogPostById(id: string) {
+    return this.request<any>(`/admin/blog/${id}`)
+  }
+
+  async createBlogPost(blogData: {
+    title: string
+    content: string
+    excerpt?: string
+    thumbnail?: string
+    status?: string
+    author_id?: string
+    tags?: string[]
+  }) {
+    return this.request<any>("/admin/blog", {
+      method: "POST",
+      body: JSON.stringify(blogData),
+    })
+  }
+
+  async updateBlogPost(id: string, blogData: {
+    title: string
+    content: string
+    excerpt?: string
+    thumbnail?: string
+    status?: string
+    tags?: string[]
+  }) {
+    return this.request<any>(`/admin/blog/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(blogData),
+    })
+  }
+
+  async deleteBlogPost(id: string) {
+    return this.request<any>(`/admin/blog/${id}`, {
+      method: "DELETE",
     })
   }
 }
@@ -192,6 +259,21 @@ export const packagesApi = {
   create: (data: any) => apiClient.createPackage(data),
   update: (id: string, data: any) => apiClient.updatePackage(id, data),
   delete: (id: string) => apiClient.deletePackage(id),
+}
+
+export const categoriesApi = {
+  getAll: () => apiClient.getCategories(),
+  create: (data: any) => apiClient.createCategory(data),
+  update: (id: string, data: any) => apiClient.updateCategory(id, data),
+  delete: (id: string) => apiClient.deleteCategory(id),
+}
+
+export const blogApi = {
+  getAll: (params?: any) => apiClient.getBlogPosts(params),
+  getById: (id: string) => apiClient.getBlogPostById(id),
+  create: (data: any) => apiClient.createBlogPost(data),
+  update: (id: string, data: any) => apiClient.updateBlogPost(id, data),
+  delete: (id: string) => apiClient.deleteBlogPost(id),
 }
 
 export default apiClient
