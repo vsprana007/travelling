@@ -237,10 +237,16 @@ export function BlogManagement() {
           <h1 className="text-2xl font-bold text-gray-900">Blog Management</h1>
           <p className="text-gray-600">Create and manage your travel blog content</p>
         </div>
-        <Button onClick={openCreateDialog} className="bg-cyan-600 hover:bg-cyan-700 w-full sm:w-auto">
+        {/* <Button onClick={openCreateDialog} className="bg-cyan-600 hover:bg-cyan-700 w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           New Post
-        </Button>
+        </Button> */}
+        <Link href="/admin/blog/create">
+          <Button className="bg-cyan-600 hover:bg-cyan-700 w-full sm:w-auto">
+            <Plus className="h-4 w-4 mr-2" />
+            New Post
+          </Button>
+        </Link>
       </div>
 
       {error && (

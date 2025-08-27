@@ -1,5 +1,5 @@
 "use client"
-
+import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -210,11 +210,18 @@ export function PackageManagement() {
           <h1 className="text-xl lg:text-2xl font-serif font-bold text-gray-800">Package Management</h1>
           <p className="text-sm lg:text-base text-gray-600">Manage your travel packages and offerings</p>
         </div>
-        <Button onClick={openCreateDialog} className="bg-cyan-600 hover:bg-cyan-700 text-white text-sm lg:text-base">
+        {/* <Button onClick={openCreateDialog} className="bg-cyan-600 hover:bg-cyan-700 text-white text-sm lg:text-base">
           <Plus className="h-4 w-4 mr-2" />
           <span className="hidden sm:inline">Add New Package</span>
           <span className="sm:hidden">New Package</span>
-        </Button>
+        </Button> */}
+        <Link href="/admin/packages/create">
+          <Button className="bg-cyan-600 hover:bg-cyan-700 text-white text-sm lg:text-base">
+            <Plus className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">Add New Package</span>
+            <span className="sm:hidden">New Package</span>
+          </Button>
+        </Link>
       </div>
 
       {error && (
